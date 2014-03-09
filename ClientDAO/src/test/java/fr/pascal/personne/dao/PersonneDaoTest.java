@@ -62,6 +62,7 @@ public class PersonneDaoTest extends
 		 */
         pers1 = personneDao.findbyId(0L);
         assertNotNull(pers1);
+        logger.info(pers1.toString());
 		/*
 		 * Element inexistant
 		 */
@@ -73,7 +74,7 @@ public class PersonneDaoTest extends
     @Transactional
     @Rollback(value = false)
     public void testCreate() {
-        Personne pers,pers1;
+        Personne pers;
         pers = new Personne();
         pers.setGenre(Genre.Femme);
         pers.setNom_naissance("Martin");

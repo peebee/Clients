@@ -2,154 +2,168 @@ package fr.pascal.personne.entity;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 @Entity
-public class Personne implements Serializable,Cloneable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1532311120726607298L;
+public class Personne implements Serializable {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+    private static final long serialVersionUID = 1532311120726607298L;
+    private static final String newligne = System.getProperty("line.separator");
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+    private String dtdeces ;
 
-	@Column(nullable = false, length = 30)
-	private String nom_naissance;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-	@Column(nullable = false, length = 30)
-	private String nom_usage;
+    @Version
+    @Column(nullable = false)
+    private int version;
 
-	@Column(nullable = false, length = 30)
-	private String prenom;
+    @Column(nullable = false, length = 30)
+    private String nom_naissance;
 
-	@Temporal(TemporalType.DATE)
-	private Date dt_naissance;
+    @Column(nullable = false, length = 30)
+    private String nom_usage;
 
-	@Temporal(TemporalType.DATE)
-	private Date dt_deces;
+    @Column(nullable = false, length = 30)
+    private String prenom;
 
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		return super.clone();
-	}
+    @Temporal(TemporalType.DATE)
+    private Date dt_naissance;
 
-	@Enumerated(EnumType.STRING)
-	private Genre genre;
+    @Temporal(TemporalType.DATE)
+    private Date dt_deces;
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
+    @Enumerated(EnumType.STRING)
+    private Genre genre;
 
-		final Personne other = (Personne) obj;
+    @ManyToMany
+    @JoinTable(name = "Personne_Adresse",
+            joinColumns = @JoinColumn(name = "personne_Id"),
+            inverseJoinColumns = @JoinColumn(name = "adresse_Id"))
+    private Collection<Adresse> adresses ;
 
-		if (id == null) {
-			if (other.id != null) {
-				return false;
-			}
-		} else if (!id.equals(other.id)) {
-			return false;
-		}
+    public Long getId() {
+        return id;
+    }
 
-		return true;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 7;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
+    public String getNom_naissance() {
+        return nom_naissance;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public void setNom_naissance(String nom_naissance) {
+        this.nom_naissance = nom_naissance;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public String getNom_usage() {
+        return nom_usage;
+    }
 
-	public String getNom_naissance() {
-		return nom_naissance;
-	}
+    public void setNom_usage(String nom_usage) {
+        this.nom_usage = nom_usage;
+    }
 
-	public void setNom_naissance(String nom_naissance) {
-		this.nom_naissance = nom_naissance;
-	}
+    public String getPrenom() {
+        return prenom;
+    }
 
-	public String getNom_usage() {
-		return nom_usage;
-	}
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
 
-	public void setNom_usage(String nom_usage) {
-		this.nom_usage = nom_usage;
-	}
+    public Date getDt_naissance() {
+        return dt_naissance;
+    }
 
-	public String getPrenom() {
-		return prenom;
-	}
+    public void setDt_naissance(Date dt_naissance) {
+        this.dt_naissance = dt_naissance;
+    }
 
-	public void setPrenom(String prenom) {
-		this.prenom = prenom;
-	}
+    public Date getDt_deces() {
+        return dt_deces;
+    }
 
-	public Date getDt_naissance() {
-		return dt_naissance;
-	}
+    public void setDt_deces(Date dt_deces) {
+        this.dt_deces = dt_deces;
+    }
 
-	public void setDt_naissance(Date dt_naissance) {
-		this.dt_naissance = dt_naissance;
-	}
+    public Genre getGenre() {
+        return genre;
+    }
 
-	public Date getDt_deces() {
-		return dt_deces;
-	}
+    public void setGenre(Genre genre) {
+        this.genre = genre;
+    }
 
-	public void setDt_deces(Date dt_deces) {
-		this.dt_deces = dt_deces;
-	}
+    public Collection<Adresse> getAdresses() {
+        return adresses;
+    }
 
-	public Genre getGenre() {
-		return genre;
-	}
+    public void setAdresses(Collection<Adresse> adresses) {
+        this.adresses = adresses;
+    }
 
-	public void setGenre(Genre genre) {
-		this.genre = genre;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Personne)) return false;
 
-	@Override
-	public String toString() {
-		String Newligne=System.getProperty("line.separator");
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.getClass()).append("-").append(Newligne);
-		sb.append("  id = ").append(id).append(Newligne);
-		sb.append("  nom d'usage = ").append(nom_usage).append(Newligne);
-		sb.append("  nom de naissance = ").append(nom_naissance).append(Newligne);
-		sb.append("  prénom=").append(prenom).append(Newligne);
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-		sb.append("  date de naissance = ").append(sdf.format(dt_naissance)).append(Newligne);
-		sb.append("  date de décés = ").append((dt_deces!=null) ? sdf.format(dt_deces):"NULL");
-		return sb.toString();
-	}
+        Personne personne = (Personne) o;
 
+        if (dt_deces != null ? !dt_deces.equals(personne.dt_deces) : personne.dt_deces != null) return false;
+        if (dt_naissance != null ? !dt_naissance.equals(personne.dt_naissance) : personne.dt_naissance != null)
+            return false;
+        if (genre != personne.genre) return false;
+        if (id != null ? !id.equals(personne.id) : personne.id != null) return false;
+        if (nom_naissance != null ? !nom_naissance.equals(personne.nom_naissance) : personne.nom_naissance != null)
+            return false;
+        if (nom_usage != null ? !nom_usage.equals(personne.nom_usage) : personne.nom_usage != null) return false;
+        if (prenom != null ? !prenom.equals(personne.prenom) : personne.prenom != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (nom_naissance != null ? nom_naissance.hashCode() : 0);
+        result = 31 * result + (nom_usage != null ? nom_usage.hashCode() : 0);
+        result = 31 * result + (prenom != null ? prenom.hashCode() : 0);
+        result = 31 * result + (dt_naissance != null ? dt_naissance.hashCode() : 0);
+        result = 31 * result + (dt_deces != null ? dt_deces.hashCode() : 0);
+        result = 31 * result + (genre != null ? genre.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        dtdeces = (dt_deces!=null)?sdf.format(dt_deces):null;
+        String ret =  "Personne{" +
+                "id=" + id + newligne +
+                ", nom_naissance='" + nom_naissance + newligne +
+                ", nom_usage='" + nom_usage + newligne +
+                ", prénom='" + prenom + newligne +
+                ", dt_naissance=" + sdf.format(dt_naissance) + newligne +
+                ", dt_décès=" + dtdeces + newligne +
+                ", genre=" + genre + newligne;
+        if (adresses!=null){
+            for (Adresse adresse : adresses){
+                ret = ret + adresse.toString();
+            }
+        } else {
+            ret = ret + null;
+        }
+
+        ret = ret + '}';
+
+        return ret;
+    }
 }
